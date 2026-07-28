@@ -27,4 +27,11 @@
     <string name="register_screen_textfield_confirm_password">Confirma tu contraseña</string>
     <string name="register_screen_button_save_user">Guardar</string>
     <string name="pokedex_screen_title">Pokédex</string>
+    <string name="image_content_description">Imagen de  %1$s</string>
+    <string name="drawer_item_home">Home</string>
+    <string name="drawer_item_settings">Settings</string>
+    <string name="drawer_item_favorites">Favorites</string>
+    <string name="drawer_item_log_out">Log out</string>
+    <string name="content_description_icon_logout">Icono logout</string>
+    <string name="login_screen_user_already_exists">El usuario ya existe</string>
 </resources>

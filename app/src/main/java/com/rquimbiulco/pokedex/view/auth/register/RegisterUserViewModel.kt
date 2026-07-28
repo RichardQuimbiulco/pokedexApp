@@ -1,39 +1,47 @@
 package com.rquimbiulco.pokedex.view.auth.register
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rquimbiulco.pokedex.domain.model.UserMode
 import com.rquimbiulco.pokedex.domain.model.UserRegisterModel
 import com.rquimbiulco.pokedex.domain.usecase.AddNewUserUseCase
 import com.rquimbiulco.pokedex.view.auth.Validator
+import com.rquimbiulco.pokedex.view.core.architecture.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
-class RegisterViewModel @Inject constructor(
+class RegisterUserViewModel @Inject constructor(
     private val validator: Validator,
     private val addNewUserUseCase: AddNewUserUseCase,
-) : ViewModel() {
-    val uiState = MutableStateFlow(RegisterUiState())
+) : BaseViewModel<RegisterUiState, RegisterUserAction, RegisterUserUiEvent>(initialState = RegisterUiState()) {
     private val events = MutableSharedFlow<FormEvent>()
 
+    override fun handleAction(action: RegisterUserAction) {
+        when (action) {
+            RegisterUserAction.OnSaveButtonClicked -> addNewUser()
+            RegisterUserAction.OnBackButtonClicked -> launch { sendEvent(RegisterUserUiEvent.NavigateBack) }
+            is RegisterUserAction.OnEmailChanged -> onEmailChange(action.email)
+            is RegisterUserAction.OnPasswordChanged -> onPasswordChange(action.password)
+            is RegisterUserAction.OnConfirmPasswordChanged -> onConfirmPasswordChange(action.confirmPassword)
+            is RegisterUserAction.OnPasswordShowChange -> onPasswordShowChange(action.show)
+            is RegisterUserAction.OnConfirmPasswordShowChange -> onConfirmPasswordShowChange(action.show)
+            is RegisterUserAction.OnUserTypeChanged -> onUserTypeChange(action.userType)
+        }
+    }
+
     init {
-        viewModelScope.launch {
+        launch {
             events
                 .debounce(DEBOUNCE) // Espera 500ms de silencio y no mostrar inmediatamente el error de formato de email, para evitar mostrar el error mientras el usuario está escribiendo
                 .collect { event ->
                     when (event) {
                         is FormEvent.EmailChanged -> {
-                            uiState.update { state ->
+                            updateState { state ->
                                 state.copy(
                                     showEmailFormatError = validator.isValidEmail(event.email),
                                 )
@@ -41,7 +49,7 @@ class RegisterViewModel @Inject constructor(
                         }
 
                         is FormEvent.PasswordChanged -> {
-                            uiState.update { state ->
+                            updateState { state ->
                                 state.copy(
                                     isValidPassword = validator.isValidPassword(event.pass),
                                     showPasswordMatchError = validator.validatePasswordMatch(
@@ -53,7 +61,7 @@ class RegisterViewModel @Inject constructor(
                         }
 
                         is FormEvent.ConfirmPasswordChanged -> {
-                            uiState.update { state ->
+                            updateState { state ->
                                 state.copy(
                                     showPasswordMatchError = validator.validatePasswordMatch(
                                         uiState.value.registerForm.password,
@@ -67,8 +75,8 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun onEmailChange(email: String) {
-        uiState.update { state ->
+    private fun onEmailChange(email: String) {
+        updateState { state ->
             state.copy(
                 registerForm = uiState.value.registerForm.copy(email = email),
             )
@@ -78,8 +86,8 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun onPasswordChange(password: String) {
-        uiState.update { state ->
+    private fun onPasswordChange(password: String) {
+        updateState { state ->
             state.copy(
                 registerForm = uiState.value.registerForm.copy(password = password),
             )
@@ -89,8 +97,8 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun onConfirmPasswordChange(confirmPassword: String) {
-        uiState.update { state ->
+    private fun onConfirmPasswordChange(confirmPassword: String) {
+        updateState { state ->
             state.copy(
                 registerForm = uiState.value.registerForm.copy(confirmPassword = confirmPassword),
             )
@@ -100,30 +108,31 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun onUserTypeChange(userType: String) {
-        uiState.update { state ->
+    private fun onUserTypeChange(userType: String) {
+        updateState { state ->
             state.copy(
                 registerForm = uiState.value.registerForm.copy(userType = if (userType == TRAINER_USER) UserMode.trainerUser else UserMode.adminUser),
             )
         }
     }
 
-    fun onPasswordShowChange(show: Boolean) {
-        uiState.update { state ->
+    private fun onPasswordShowChange(show: Boolean) {
+        updateState { state ->
             state.copy(passwordVisibility = show)
         }
     }
 
-    fun onConfirmPasswordShowChange(show: Boolean) {
-        uiState.update { state ->
+    private fun onConfirmPasswordShowChange(show: Boolean) {
+        updateState { state ->
             state.copy(
                 confirmPasswordVisibility = show
             )
         }
     }
 
-    fun addNewUser() {
-        viewModelScope.launch {
+    private fun addNewUser() {
+        updateState { state -> state.copy(isLoading = true) }
+        launch {
             uiState.value.registerForm.apply {
                 val result = addNewUserUseCase(
                     UserRegisterModel(
@@ -133,17 +142,19 @@ class RegisterViewModel @Inject constructor(
                     )
                 )
                 result.onSuccess {
-                    uiState.update { state ->
-                        state.copy(
-                            registrationStatus = RegisterUserUiState.Success
-                        )
-                    }
+                    sendEvent(
+                        RegisterUserUiEvent.NavigateToPokedex
+                    )
+                    updateState { state -> state.copy(isLoading = false) }
                 }.onFailure { error ->
-                    uiState.update { state ->
+                    sendEvent(
+                        RegisterUserUiEvent.ShowError(
+                            error.message ?: UNKNOWN_ERROR
+                        )
+                    )
+                    updateState { state ->
                         state.copy(
-                            registrationStatus = RegisterUserUiState.Error(
-                                error.message ?: "Error desconocido"
-                            )
+                            isLoading = false,
                         )
                     }
                 }
@@ -158,13 +169,14 @@ class RegisterViewModel @Inject constructor(
             val confirmPassword = registerForm.confirmPassword
             val isSaveEnabled =
                 email.isNotBlank() && password.isNotBlank() && confirmPassword.isNotBlank() && !showEmailFormatError && !showPasswordMatchError && !isValidPassword
-            uiState.update { state ->
+            updateState { state ->
                 state.copy(isSaveEnabled = isSaveEnabled)
             }
         }
     }
 
     companion object {
+        private const val UNKNOWN_ERROR = "Error desconocido"
         private const val TRAINER_USER = "Trainer"
         private const val DEBOUNCE = 500L
     }

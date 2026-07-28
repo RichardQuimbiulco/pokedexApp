@@ -20,12 +20,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,11 +33,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rquimbiulco.pokedex.R
 import com.rquimbiulco.pokedex.view.core.components.MyPokeRegisterRadioButton
 import com.rquimbiulco.pokedex.view.core.components.PokeButtonPrimary
@@ -47,36 +45,22 @@ import com.rquimbiulco.pokedex.view.core.components.PokeTextField
 import com.rquimbiulco.pokedex.view.core.components.PokeTrailingIconTextField
 
 @Composable
-fun RegisterScreen(
-    registerViewModel: RegisterViewModel = hiltViewModel(),
-    navigateBack: () -> Unit,
-    navigatePokedexScreen: () -> Unit
+fun RegisterUserScreen(
+    state: RegisterUiState,
+    onAction: (RegisterUserAction) -> Unit,
+    snackBarHostState: SnackbarHostState,
 ) {
-    val uiState by registerViewModel.uiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(uiState.registrationStatus) {
-        when (uiState.registrationStatus) {
-            is RegisterUserUiState.Success -> {
-                navigatePokedexScreen()
-            }
-
-            is RegisterUserUiState.Error -> {
-                snackBarHostState.showSnackbar((uiState.registrationStatus as RegisterUserUiState.Error).message)
-            }
-
-            else -> {}
-        }
-    }
-
     Scaffold(
         topBar = {
-            TopBar(navigateBack = navigateBack)
+            TopBar(navigateBack = { onAction(RegisterUserAction.OnBackButtonClicked) })
         },
         bottomBar = {
             BottomBar(
-                isSaveEnabled = uiState.isSaveEnabled,
-                onSaveClick = { registerViewModel.addNewUser() })
+                isSaveEnabled = state.isSaveEnabled && !state.isLoading,
+                onSaveClick = { onAction(RegisterUserAction.OnSaveButtonClicked) })
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
         }
     ) { padding ->
         Column(
@@ -103,13 +87,13 @@ fun RegisterScreen(
             PokeTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = uiState.registerForm.email,
-                onValueChange = { registerViewModel.onEmailChange(it) },
+                value = state.registerForm.email,
+                onValueChange = { onAction(RegisterUserAction.OnEmailChanged(it)) },
                 label = stringResource(R.string.register_screen_textfield_email),
                 shape = MaterialTheme.shapes.medium
             )
             Spacer(Modifier.height(10.dp))
-            AnimatedVisibility(visible = uiState.showEmailFormatError) {
+            AnimatedVisibility(visible = state.showEmailFormatError) {
                 PokeText(
                     text = stringResource(R.string.register_screen_text_wrong_email_format),
                     style = MaterialTheme.typography.bodyMedium,
@@ -120,23 +104,23 @@ fun RegisterScreen(
             PokeTrailingIconTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = uiState.registerForm.password,
-                onValueChange = { registerViewModel.onPasswordChange(it) },
+                value = state.registerForm.password,
+                onValueChange = { onAction(RegisterUserAction.OnPasswordChanged(it)) },
                 label = stringResource(R.string.register_screen_textfield_password),
-                trailingIconId = if (uiState.passwordVisibility) {
+                trailingIconId = if (state.passwordVisibility) {
                     R.drawable.ic_eye_password
                 } else {
                     R.drawable.ic_eye_password_show
                 },
-                onIconClick = { registerViewModel.onPasswordShowChange(!uiState.passwordVisibility) },
-                visualTransformation = if (uiState.passwordVisibility) {
+                onIconClick = { onAction(RegisterUserAction.OnPasswordShowChange(!state.passwordVisibility)) }, //registerViewModel.onPasswordShowChange(!uiState.passwordVisibility)
+                visualTransformation = if (state.passwordVisibility) {
                     VisualTransformation.None
                 } else {
                     PasswordVisualTransformation()
                 }
             )
             Spacer(Modifier.height(10.dp))
-            AnimatedVisibility(visible = uiState.isValidPassword) {
+            AnimatedVisibility(visible = state.isValidPassword) {
                 PokeText(
                     text = stringResource(R.string.register_screen_text_is_not_valid_password),
                     style = MaterialTheme.typography.bodyMedium,
@@ -147,23 +131,23 @@ fun RegisterScreen(
             PokeTrailingIconTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = uiState.registerForm.confirmPassword,
-                onValueChange = { registerViewModel.onConfirmPasswordChange(it) },
+                value = state.registerForm.confirmPassword,
+                onValueChange = { onAction(RegisterUserAction.OnConfirmPasswordChanged(it)) },
                 label = stringResource(R.string.register_screen_textfield_confirm_password),
-                trailingIconId = if (uiState.confirmPasswordVisibility) {
+                trailingIconId = if (state.confirmPasswordVisibility) {
                     R.drawable.ic_eye_password
                 } else {
                     R.drawable.ic_eye_password_show
                 },
-                onIconClick = { registerViewModel.onConfirmPasswordShowChange(!uiState.confirmPasswordVisibility) },
-                visualTransformation = if (uiState.confirmPasswordVisibility) {
+                onIconClick = { onAction(RegisterUserAction.OnConfirmPasswordShowChange(!state.confirmPasswordVisibility)) },
+                visualTransformation = if (state.confirmPasswordVisibility) {
                     VisualTransformation.None
                 } else {
                     PasswordVisualTransformation()
                 }
             )
             Spacer(Modifier.height(10.dp))
-            AnimatedVisibility(visible = uiState.showPasswordMatchError) {
+            AnimatedVisibility(visible = state.showPasswordMatchError) {
                 PokeText(
                     text = stringResource(R.string.register_screen_text_wrong_confirm_password),
                     style = MaterialTheme.typography.bodyMedium,
@@ -187,8 +171,8 @@ fun RegisterScreen(
                     icon = painterResource(R.drawable.ic_pokeball),
                     contentDescription = stringResource(R.string.register_screen_content_description_trainer_regular_icon),
                     text = stringResource(R.string.register_screen_radio_button_trainer),
-                    onClick = { registerViewModel.onUserTypeChange(it) },
-                    selected = uiState.registerForm.userType.userType == 0
+                    onClick = { onAction(RegisterUserAction.OnUserTypeChanged(it)) }, //registerViewModel.onUserTypeChange(it)
+                    selected = state.registerForm.userType.userType == 0
                 )
                 MyPokeRegisterRadioButton(
                     modifier = Modifier
@@ -198,11 +182,29 @@ fun RegisterScreen(
                     icon = painterResource(R.drawable.pokemon_trainer),
                     contentDescription = stringResource(R.string.register_screen_content_description_trainer_icon),
                     text = stringResource(R.string.register_screen_radio_button_admin),
-                    onClick = { registerViewModel.onUserTypeChange(it) },
-                    selected = uiState.registerForm.userType.userType == 1
+                    onClick = { onAction(RegisterUserAction.OnUserTypeChanged(it)) },
+                    selected = state.registerForm.userType.userType == 1
                 )
             }
         }
+    }
+    if (state.isLoading) {
+        CircularProgressBar()
+    }
+}
+
+@Composable
+fun CircularProgressBar() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.3f)),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.primary,
+            strokeWidth = 4.dp
+        )
     }
 }
 
@@ -252,17 +254,41 @@ fun BottomBar(isSaveEnabled: Boolean, onSaveClick: () -> Unit) {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun CircularProgressBar() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.3f)), // Fondo semi-transparente
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.primary,
-            strokeWidth = 4.dp
-        )
-    }
+private fun RegisterUserScreenPreview() {
+    RegisterUserScreen(
+        state = RegisterUiState(),
+        onAction = {},
+        snackBarHostState = remember { SnackbarHostState() }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RegisterUserScreenLoadingPreview() {
+    RegisterUserScreen(
+        state = RegisterUiState(
+            isLoading = true
+        ),
+        onAction = {},
+        snackBarHostState = remember { SnackbarHostState() }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RegisterUserScreenFilledPreview() {
+    RegisterUserScreen(
+        state = RegisterUiState(
+            registerForm = RegisterForm(
+                email = "ash@pokemon.com",
+                password = "123456",
+                confirmPassword = "123456"
+            ),
+            isSaveEnabled = true
+        ),
+        onAction = {},
+        snackBarHostState = remember { SnackbarHostState() }
+    )
 }

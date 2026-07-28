@@ -3,7 +3,6 @@ package com.rquimbiulco.pokedex.view.auth.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,21 +32,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rquimbiulco.pokedex.R
-import com.rquimbiulco.pokedex.view.auth.register.RegisterUserUiState
 import com.rquimbiulco.pokedex.view.core.components.PokeButtonPrimary
 import com.rquimbiulco.pokedex.view.core.components.PokeButtonSecondary
 import com.rquimbiulco.pokedex.view.core.components.PokeDropDownMenuItem
 import com.rquimbiulco.pokedex.view.core.components.PokeText
 import com.rquimbiulco.pokedex.view.core.components.PokeTextField
 import com.rquimbiulco.pokedex.view.core.components.PokeTrailingIconTextField
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(

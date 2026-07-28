@@ -1,6 +1,7 @@
 package com.rquimbiulco.pokedex.view.auth.register
 
 import com.rquimbiulco.pokedex.domain.model.UserMode
+import com.rquimbiulco.pokedex.view.core.architecture.state.ScreenState
 
 data class RegisterUiState(
     val passwordVisibility: Boolean = false,
@@ -10,8 +11,8 @@ data class RegisterUiState(
     val isValidPassword: Boolean = false,
     val isSaveEnabled: Boolean = false,
     val registerForm: RegisterForm = RegisterForm(),
-    val registrationStatus: RegisterUserUiState = RegisterUserUiState.Idle
-)
+    val isLoading: Boolean = false
+) : ScreenState
 
 data class RegisterForm(
     val email: String = "",
@@ -19,13 +20,6 @@ data class RegisterForm(
     val confirmPassword: String = "",
     val userType: UserMode = UserMode.trainerUser,
 )
-
-sealed interface RegisterUserUiState {
-    object Idle : RegisterUserUiState
-    object Loading : RegisterUserUiState
-    object Success : RegisterUserUiState
-    data class Error(val message: String) : RegisterUserUiState
-}
 
 sealed class FormEvent {
     data class EmailChanged(val email: String) : FormEvent()
