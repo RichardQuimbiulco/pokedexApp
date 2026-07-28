@@ -1,7 +1,6 @@
 package com.rquimbiulco.pokedex.view.pokedex
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,48 +11,127 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.rquimbiulco.pokedex.R
 import com.rquimbiulco.pokedex.domain.model.PokemonModel
-import com.rquimbiulco.pokedex.view.auth.register.BottomBar
-import com.rquimbiulco.pokedex.view.auth.register.TopBar
+import com.rquimbiulco.pokedex.view.core.navigation.DrawerDestination
+import com.rquimbiulco.pokedex.view.core.components.PokeModalNavigationDrawer
 import com.rquimbiulco.pokedex.view.core.components.PokeText
+import com.rquimbiulco.pokedex.view.core.components.model.DrawerItem
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokedexScreen(
-    pokeDexViewModel: PokeDexViewModel = hiltViewModel(),
+    navigateToLogin: () -> Unit,
+    viewmodel: PokeDexViewModel
 ) {
-    val lazyPokemonItems = pokeDexViewModel.pokemonFlow.collectAsLazyPagingItems()
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    val lazyPokemonItems = viewmodel.pokemonFlow.collectAsLazyPagingItems()
+    val myItems = listOf(
+        DrawerItem(
+            id = DrawerDestination.Home,
+            title = R.string.drawer_item_home,
+            icon = R.drawable.ic_home,
+            notification = 0,
+            contentDescription = stringResource(R.string.content_description_icon_logout)
+        ),
+        DrawerItem(
+            id = DrawerDestination.Favorites,
+            title = R.string.drawer_item_favorites,
+            icon = R.drawable.ic_favorite,
+            notification = 0,
+            contentDescription = stringResource(R.string.content_description_icon_logout)
+        ),
+        DrawerItem(
+            id = DrawerDestination.Settings,
+            title = R.string.drawer_item_settings,
+            icon = R.drawable.ic_settings,
+            notification = 0,
+            contentDescription = stringResource(R.string.content_description_icon_logout)
+        ),
+        DrawerItem(
+            id = DrawerDestination.Logout,
+            title = R.string.drawer_item_log_out,
+            icon = R.drawable.ic_logout,
+            notification = 0,
+            contentDescription = stringResource(R.string.content_description_icon_logout)
+        )
+    )
 
-    Scaffold(
-        topBar = {
-            PokeText(
-                text = stringResource(R.string.pokedex_screen_title),
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(24.dp)
-            )
+    LaunchedEffect(Unit) {
+
+        viewmodel.uiEvent.collect { event ->
+
+            when (event) {
+
+                PokedexEvent.NavigateToLogin -> {
+                    navigateToLogin()
+                }
+            }
         }
-    ) { padding ->
-        Column(
-            Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .padding(padding)
-                .padding(start = 24.dp, end = 24.dp)
-                .fillMaxSize(),
-        ) {
-            LazyColumn {
+    }
+
+    PokeModalNavigationDrawer(drawerState, myItems, onItemClick = { item ->
+        viewmodel.onAction(
+            PokedexAction.DrawerItemClicked(
+                item.id
+            )
+        )
+    }) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        PokeText(
+                            text = stringResource(R.string.pokedex_screen_title),
+                            style = MaterialTheme.typography.headlineMedium,
+                            modifier = Modifier.padding(24.dp)
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painterResource(R.drawable.ic_menu),
+                                contentDescription = null
+                            )
+                        }
+                    }
+                )
+
+            },
+        ) { padding ->
+            LazyColumn(
+                Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(padding)
+                    .padding(start = 14.dp, end = 14.dp)
+                    .fillMaxSize(),
+            ) {
                 items(count = lazyPokemonItems.itemCount) { index ->
                     val pokemon = lazyPokemonItems[index]
                     pokemon?.let {
@@ -81,7 +159,10 @@ fun PokemonItem(pokemonModel: PokemonModel) {
         ) {
             AsyncImage(
                 model = pokemonModel.imageUrl,
-                contentDescription = "Imagen de ${pokemonModel.name}",
+                contentDescription = stringResource(
+                    R.string.image_content_description,
+                    pokemonModel.name
+                ),
                 modifier = Modifier.size(80.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -93,8 +174,8 @@ fun PokemonItem(pokemonModel: PokemonModel) {
     }
 }
 
-@Preview
+/*@Preview
 @Composable
 fun PokedexScreenPreview() {
     PokedexScreen()
-}
+}*/
