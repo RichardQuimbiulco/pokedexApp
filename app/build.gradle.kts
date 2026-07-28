@@ -82,6 +82,9 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.paging.runtime)
 
+    //Datastore
+    implementation(libs.androidx.datastore.preferences)
+
     //Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -6,8 +6,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.rquimbiulco.pokedex.data.datasource.api.ApiService
-import com.rquimbiulco.pokedex.data.datasource.database.PokeDatabase
-import com.rquimbiulco.pokedex.data.datasource.database.entity.toModel
+import com.rquimbiulco.pokedex.data.datasource.local.database.PokeDatabase
+import com.rquimbiulco.pokedex.data.datasource.local.database.entity.toModel
 import com.rquimbiulco.pokedex.data.repository.mediator.PokemonRemoteMediator
 import com.rquimbiulco.pokedex.domain.model.PokemonModel
 import com.rquimbiulco.pokedex.domain.repository.PokemonRepository

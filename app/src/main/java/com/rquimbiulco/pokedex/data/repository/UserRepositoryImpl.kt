@@ -1,15 +1,12 @@
 package com.rquimbiulco.pokedex.data.repository
 
-import com.rquimbiulco.pokedex.data.datasource.database.dao.UserDao
-import com.rquimbiulco.pokedex.data.datasource.database.entity.toUserModel
-import com.rquimbiulco.pokedex.domain.model.UserModel
+import com.rquimbiulco.pokedex.data.datasource.local.database.dao.UserDao
+import com.rquimbiulco.pokedex.data.datasource.local.database.entity.toUserModel
 import com.rquimbiulco.pokedex.domain.model.UserRegisterModel
 import com.rquimbiulco.pokedex.domain.model.toUserEntity
 import com.rquimbiulco.pokedex.domain.repository.UserRepository
 import com.rquimbiulco.pokedex.domain.model.LoginResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

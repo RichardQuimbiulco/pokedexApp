@@ -6,8 +6,8 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.rquimbiulco.pokedex.data.datasource.api.ApiService
-import com.rquimbiulco.pokedex.data.datasource.database.PokeDatabase
-import com.rquimbiulco.pokedex.data.datasource.database.entity.PokemonEntity
+import com.rquimbiulco.pokedex.data.datasource.local.database.PokeDatabase
+import com.rquimbiulco.pokedex.data.datasource.local.database.entity.PokemonEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
