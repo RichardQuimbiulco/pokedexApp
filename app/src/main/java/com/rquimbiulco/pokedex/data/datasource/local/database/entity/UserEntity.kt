@@ -1,4 +1,4 @@
-package com.rquimbiulco.pokedex.data.datasource.database.entity
+package com.rquimbiulco.pokedex.data.datasource.local.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,6 +1,6 @@
 package com.rquimbiulco.pokedex.domain.model
 
-import com.rquimbiulco.pokedex.data.datasource.database.entity.UserEntity
+import com.rquimbiulco.pokedex.data.datasource.local.database.entity.UserEntity
 
 data class UserRegisterModel(
     val userId: Int = System.currentTimeMillis().hashCode(),

@@ -1,11 +1,11 @@
-package com.rquimbiulco.pokedex.data.datasource.database.dao
+package com.rquimbiulco.pokedex.data.datasource.local.database.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.rquimbiulco.pokedex.data.datasource.database.entity.PokemonEntity
+import com.rquimbiulco.pokedex.data.datasource.local.database.entity.PokemonEntity
 
 @Dao
 interface PokemonDao {
