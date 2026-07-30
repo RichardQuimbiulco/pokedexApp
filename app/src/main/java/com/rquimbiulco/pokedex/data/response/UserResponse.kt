@@ -14,9 +14,9 @@ data class UserResponse(
 fun UserResponse.toDomain(): UserModel {
 
     val userMode = when (userType) {
-        UserMode.trainerUser.userType -> UserMode.trainerUser
-        UserMode.adminUser.userType -> UserMode.adminUser
-        else -> UserMode.trainerUser
+        UserMode.TRAINER.id -> UserMode.TRAINER
+        UserMode.ADMIN.id -> UserMode.ADMIN
+        else -> UserMode.TRAINER
     }
     return UserModel(
         userId = userId,

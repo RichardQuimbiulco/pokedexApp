@@ -4,8 +4,6 @@
     <string name="login_screen_textfield_password">Contraseña</string>
     <string name="login_screen_content_description_person_icon">User type Icon</string>
     <string name="login_screen_content_description_arrow_icon">Arrow type Icon</string>
-    <string name="login_screen_dropdown_menu_item_admin">Admin</string>
-    <string name="login_screen_dropdown_menu_item_normal">Normal</string>
     <string name="login_screen_content_description_pokemon_image">Pokemon image</string>
     <string name="login_screen_button_forgot_password">¿Has olvidado tu contraseña?</string>
     <string name="login_screen_header_new_account">Crear cuenta nueva</string>
@@ -34,4 +32,8 @@
     <string name="drawer_item_log_out">Log out</string>
     <string name="content_description_icon_logout">Icono logout</string>
     <string name="login_screen_user_already_exists">El usuario ya existe</string>
+    <string name="trainer">Entrenador</string>
+    <string name="admin">Admin</string>
+    <string name="invalid_credentials">Invalid credentials</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>

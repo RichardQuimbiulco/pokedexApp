@@ -172,7 +172,7 @@ fun RegisterUserScreen(
                     contentDescription = stringResource(R.string.register_screen_content_description_trainer_regular_icon),
                     text = stringResource(R.string.register_screen_radio_button_trainer),
                     onClick = { onAction(RegisterUserAction.OnUserTypeChanged(it)) }, //registerViewModel.onUserTypeChange(it)
-                    selected = state.registerForm.userType.userType == 0
+                    selected = state.registerForm.userType.id == 0
                 )
                 MyPokeRegisterRadioButton(
                     modifier = Modifier
@@ -183,7 +183,7 @@ fun RegisterUserScreen(
                     contentDescription = stringResource(R.string.register_screen_content_description_trainer_icon),
                     text = stringResource(R.string.register_screen_radio_button_admin),
                     onClick = { onAction(RegisterUserAction.OnUserTypeChanged(it)) },
-                    selected = state.registerForm.userType.userType == 1
+                    selected = state.registerForm.userType.id == 1
                 )
             }
         }

@@ -6,7 +6,7 @@ data class UserModel(
     val userMode: UserMode
 )
 
-sealed class UserMode(val userType: Int) {
-    data object trainerUser : UserMode(0)
-    data object adminUser : UserMode(1)
+enum class UserMode(val id: Int) {
+    TRAINER(0),
+    ADMIN(1)
 }

@@ -15,8 +15,8 @@ fun UserRegisterModel.toUserEntity(): UserEntity {
         email = email,
         password = password,
         userType = when (userMode) {
-            is UserMode.trainerUser -> 0
-            is UserMode.adminUser -> 1
+            UserMode.TRAINER -> 0
+            UserMode.ADMIN -> 1
         }
     )
 }

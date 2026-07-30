@@ -22,9 +22,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,9 +32,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rquimbiulco.pokedex.R
+import com.rquimbiulco.pokedex.domain.model.UserMode
 import com.rquimbiulco.pokedex.view.core.components.PokeButtonPrimary
 import com.rquimbiulco.pokedex.view.core.components.PokeButtonSecondary
 import com.rquimbiulco.pokedex.view.core.components.PokeDropDownMenuItem
@@ -47,29 +43,13 @@ import com.rquimbiulco.pokedex.view.core.components.PokeTrailingIconTextField
 
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel = hiltViewModel(),
-    navigateToRegister: () -> Unit,
-    navigatePokedexScreen: () -> Unit
+    state: LoginUiState,
+    onAction: (LoginAction) -> Unit,
+    snackBarHostState: SnackbarHostState,
 ) {
-
-    val uiState by loginViewModel.uiState.collectAsStateWithLifecycle()
-    val isFormLoading = uiState.authStatus is AuthStatus.Loading
-    val snackBarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(uiState.authStatus) {
-        when (uiState.authStatus) {
-            is AuthStatus.Success -> navigatePokedexScreen()
-            is AuthStatus.Error -> {
-                snackBarHostState.showSnackbar((uiState.authStatus as AuthStatus.Error).message)
-            }
-
-            else -> {}
-        }
-    }
-
     Scaffold(
         bottomBar = {
-            BottomBar(navigateToRegister = navigateToRegister)
+            BottomBar(navigateToRegister = { onAction(LoginAction.OnRegisterClicked) })
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }) { padding ->
         Column(
@@ -87,13 +67,15 @@ fun LoginScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 PokeText(
-                    text = uiState.userType,
+                    text = state.userType.displayName(),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 IconButton(onClick = {
-                    loginViewModel.onMenuItemSelected(
-                        userType = uiState.userType,
-                        true
+                    onAction(
+                        LoginAction.OnMenuItemSelected(
+                            state.userType,
+                            true
+                        )
                     )
                 }) {
                     Row {
@@ -109,8 +91,8 @@ fun LoginScreen(
                     }
                 }
                 DropdownMenu(
-                    expanded = uiState.expanded,
-                    onDismissRequest = { loginViewModel.onMenuItemExpanded(false) },
+                    expanded = state.expanded,
+                    onDismissRequest = { onAction(LoginAction.OnMenuItemExpanded(false)) },
                     offset = DpOffset(300.dp, 0.dp),
                     properties = PopupProperties(
                         focusable = true,
@@ -120,21 +102,15 @@ fun LoginScreen(
                 ) {
                     PokeDropDownMenuItem(
                         onClick = {
-                            loginViewModel.onMenuItemSelected(
-                                userType = "Admin",
-                                expanded = false
-                            )
+                            onAction(LoginAction.OnMenuItemSelected(UserMode.ADMIN, false))
                         },
-                        text = stringResource(R.string.login_screen_dropdown_menu_item_admin),
+                        text = stringResource(R.string.admin),
                     )
                     PokeDropDownMenuItem(
                         onClick = {
-                            loginViewModel.onMenuItemSelected(
-                                userType = "Normal",
-                                expanded = false
-                            )
+                            onAction(LoginAction.OnMenuItemSelected(UserMode.TRAINER, false))
                         },
-                        text = stringResource(R.string.login_screen_dropdown_menu_item_normal),
+                        text = stringResource(R.string.trainer),
                     )
                 }
             }
@@ -149,24 +125,24 @@ fun LoginScreen(
             PokeTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = uiState.email,
-                onValueChange = { loginViewModel.onEmailChange(it) },
+                value = state.email,
+                onValueChange = { onAction(LoginAction.OnEmailChanged(it)) },
                 label = stringResource(R.string.login_screen_textfield_user)
             )
             Spacer(Modifier.height(12.dp))
             PokeTrailingIconTextField(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = uiState.password,
-                onValueChange = { loginViewModel.onPasswordChange(it) },
+                value = state.password,
+                onValueChange = { onAction(LoginAction.OnPasswordChanged(it)) },
                 label = stringResource(R.string.login_screen_textfield_password),
-                trailingIconId = if (uiState.passwordVisibility) {
+                trailingIconId = if (state.passwordVisibility) {
                     R.drawable.ic_eye_password
                 } else {
                     R.drawable.ic_eye_password_show
                 },
-                onIconClick = { loginViewModel.onPasswordShowChange(!uiState.passwordVisibility) },
-                visualTransformation = if (uiState.passwordVisibility) {
+                onIconClick = { onAction(LoginAction.OnPasswordShowChange(!state.passwordVisibility)) },
+                visualTransformation = if (state.passwordVisibility) {
                     VisualTransformation.None
                 } else {
                     PasswordVisualTransformation()
@@ -176,8 +152,8 @@ fun LoginScreen(
             PokeButtonPrimary(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-                onClick = { loginViewModel.onClickSelected() },
-                enabled = uiState.isLoginEnabled,
+                onClick = { onAction(LoginAction.OnLoginClicked) },
+                enabled = state.isLoginEnabled,
                 text = stringResource(R.string.login_screen_button_login)
             )
             TextButton(onClick = {}) {
@@ -185,7 +161,7 @@ fun LoginScreen(
             }
         }
 
-        if (isFormLoading) {
+        if (state.isLoading) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -220,3 +196,13 @@ fun BottomBar(navigateToRegister: () -> Unit) {
         )
     }
 }
+
+@Composable
+fun UserMode.displayName(): String =
+    when (this) {
+        UserMode.TRAINER ->
+            stringResource(R.string.trainer)
+
+        UserMode.ADMIN ->
+            stringResource(R.string.admin)
+    }

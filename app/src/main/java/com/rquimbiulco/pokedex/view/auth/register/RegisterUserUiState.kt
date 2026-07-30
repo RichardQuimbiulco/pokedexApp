@@ -18,7 +18,7 @@ data class RegisterForm(
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
-    val userType: UserMode = UserMode.trainerUser,
+    val userType: UserMode = UserMode.TRAINER,
 )
 
 sealed class FormEvent {

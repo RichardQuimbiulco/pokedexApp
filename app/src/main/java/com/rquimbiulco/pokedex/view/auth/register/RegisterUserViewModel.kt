@@ -111,7 +111,7 @@ class RegisterUserViewModel @Inject constructor(
     private fun onUserTypeChange(userType: String) {
         updateState { state ->
             state.copy(
-                registerForm = uiState.value.registerForm.copy(userType = if (userType == TRAINER_USER) UserMode.trainerUser else UserMode.adminUser),
+                registerForm = uiState.value.registerForm.copy(userType = if (userType == TRAINER_USER) UserMode.TRAINER else UserMode.ADMIN),
             )
         }
     }

@@ -19,9 +19,9 @@ fun UserEntity.toUserModel(): UserModel {
         userId = id,
         email = email,
         userMode = when (userType) {
-            0 -> UserMode.trainerUser
-            1 -> UserMode.adminUser
-            else -> UserMode.trainerUser
+            0 -> UserMode.TRAINER
+            1 -> UserMode.ADMIN
+            else -> UserMode.TRAINER
         }
     )
 }

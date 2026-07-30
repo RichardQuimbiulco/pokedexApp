@@ -1,18 +1,14 @@
 package com.rquimbiulco.pokedex.view.auth.login
 
+import com.rquimbiulco.pokedex.domain.model.UserMode
+import com.rquimbiulco.pokedex.view.core.architecture.state.ScreenState
+
 data class LoginUiState(
     val email: String = "",
     val password: String = "",
     val passwordVisibility: Boolean = false,
-    val userType: String = "Normal",
+    val userType: UserMode = UserMode.TRAINER,
     val isLoading: Boolean = false,
     val isLoginEnabled: Boolean = false,
     val expanded: Boolean = false,
-    val authStatus: AuthStatus = AuthStatus.Idle
-)
-sealed class AuthStatus {
-    object Idle : AuthStatus()
-    object Loading : AuthStatus()
-    data class Success(val userName: String) : AuthStatus()
-    data class Error(val message: String) : AuthStatus()
-}
+) : ScreenState

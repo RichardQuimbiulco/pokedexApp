@@ -5,6 +5,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.rquimbiulco.pokedex.view.auth.login.LoginContainer
 import com.rquimbiulco.pokedex.view.auth.login.LoginScreen
 import com.rquimbiulco.pokedex.view.auth.register.container.RegisterUserContainer
 import com.rquimbiulco.pokedex.view.auth.splash.SplashScreen
@@ -17,7 +18,7 @@ fun NavigationWrapper() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Splash) {
         composable<Login> {
-            LoginScreen(
+            LoginContainer(
                 navigateToRegister = { navController.navigate(Register) },
                 navigatePokedexScreen = { navController.navigateToPokedex() })
         }
