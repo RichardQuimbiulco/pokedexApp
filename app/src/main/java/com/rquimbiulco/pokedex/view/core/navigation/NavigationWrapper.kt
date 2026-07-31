@@ -5,13 +5,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.rquimbiulco.pokedex.view.auth.login.LoginContainer
-import com.rquimbiulco.pokedex.view.auth.login.LoginScreen
+import com.rquimbiulco.pokedex.view.auth.login.container.LoginContainer
 import com.rquimbiulco.pokedex.view.auth.register.container.RegisterUserContainer
 import com.rquimbiulco.pokedex.view.auth.splash.SplashScreen
 import com.rquimbiulco.pokedex.view.auth.splash.SplashViewModel
-import com.rquimbiulco.pokedex.view.pokedex.PokeDexViewModel
-import com.rquimbiulco.pokedex.view.pokedex.PokedexScreen
+import com.rquimbiulco.pokedex.view.pokedex.container.PokedexContainer
 
 @Composable
 fun NavigationWrapper() {
@@ -29,12 +27,10 @@ fun NavigationWrapper() {
             )
         }
         composable<Pokedex> {
-            val pokeDexViewModel: PokeDexViewModel = hiltViewModel()
-            PokedexScreen(
+            PokedexContainer(
                 navigateToLogin = {
                     navController.navigateToLogin()
-                },
-                viewmodel = pokeDexViewModel
+                }
             )
         }
         composable<Splash> {

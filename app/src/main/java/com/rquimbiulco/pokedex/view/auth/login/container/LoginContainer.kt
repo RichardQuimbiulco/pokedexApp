@@ -1,4 +1,4 @@
-package com.rquimbiulco.pokedex.view.auth.login
+package com.rquimbiulco.pokedex.view.auth.login.container
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
@@ -10,6 +10,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rquimbiulco.pokedex.R
+import com.rquimbiulco.pokedex.view.auth.login.LoginError
+import com.rquimbiulco.pokedex.view.auth.login.LoginEvent
+import com.rquimbiulco.pokedex.view.auth.login.LoginScreen
+import com.rquimbiulco.pokedex.view.auth.login.LoginViewModel
 
 @Composable
 fun LoginContainer(

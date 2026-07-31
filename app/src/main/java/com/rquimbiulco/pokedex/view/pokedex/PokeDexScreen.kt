@@ -20,81 +20,33 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import com.rquimbiulco.pokedex.R
 import com.rquimbiulco.pokedex.domain.model.PokemonModel
-import com.rquimbiulco.pokedex.view.core.navigation.DrawerDestination
 import com.rquimbiulco.pokedex.view.core.components.PokeModalNavigationDrawer
 import com.rquimbiulco.pokedex.view.core.components.PokeText
-import com.rquimbiulco.pokedex.view.core.components.model.DrawerItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokedexScreen(
-    navigateToLogin: () -> Unit,
-    viewmodel: PokeDexViewModel
+    onAction: (PokedexAction) -> Unit,
+    pokemonItems: LazyPagingItems<PokemonModel>,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val lazyPokemonItems = viewmodel.pokemonFlow.collectAsLazyPagingItems()
-    val myItems = listOf(
-        DrawerItem(
-            id = DrawerDestination.Home,
-            title = R.string.drawer_item_home,
-            icon = R.drawable.ic_home,
-            notification = 0,
-            contentDescription = stringResource(R.string.content_description_icon_logout)
-        ),
-        DrawerItem(
-            id = DrawerDestination.Favorites,
-            title = R.string.drawer_item_favorites,
-            icon = R.drawable.ic_favorite,
-            notification = 0,
-            contentDescription = stringResource(R.string.content_description_icon_logout)
-        ),
-        DrawerItem(
-            id = DrawerDestination.Settings,
-            title = R.string.drawer_item_settings,
-            icon = R.drawable.ic_settings,
-            notification = 0,
-            contentDescription = stringResource(R.string.content_description_icon_logout)
-        ),
-        DrawerItem(
-            id = DrawerDestination.Logout,
-            title = R.string.drawer_item_log_out,
-            icon = R.drawable.ic_logout,
-            notification = 0,
-            contentDescription = stringResource(R.string.content_description_icon_logout)
-        )
-    )
 
-    LaunchedEffect(Unit) {
-
-        viewmodel.uiEvent.collect { event ->
-
-            when (event) {
-
-                PokedexEvent.NavigateToLogin -> {
-                    navigateToLogin()
-                }
-            }
-        }
-    }
-
-    PokeModalNavigationDrawer(drawerState, myItems, onItemClick = { item ->
-        viewmodel.onAction(
-            PokedexAction.DrawerItemClicked(
-                item.id
-            )
+    PokeModalNavigationDrawer(drawerState, onItemClick = { item ->
+        onAction(
+            PokedexAction.DrawerItemClicked(destination = item)
         )
     }) {
         Scaffold(
@@ -132,8 +84,8 @@ fun PokedexScreen(
                     .padding(start = 14.dp, end = 14.dp)
                     .fillMaxSize(),
             ) {
-                items(count = lazyPokemonItems.itemCount) { index ->
-                    val pokemon = lazyPokemonItems[index]
+                items(count = pokemonItems.itemCount) { index ->
+                    val pokemon = pokemonItems[index]
                     pokemon?.let {
                         PokemonItem(it)
                     }
@@ -174,8 +126,14 @@ fun PokemonItem(pokemonModel: PokemonModel) {
     }
 }
 
-/*@Preview
+@Preview
 @Composable
-fun PokedexScreenPreview() {
-    PokedexScreen()
-}*/
+fun PokemonItemPreview() {
+    PokemonItem(
+        pokemonModel = PokemonModel(
+            id = 0,
+            name = "bulbasaur",
+            imageUrl = ""
+        )
+    )
+}

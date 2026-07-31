@@ -7,20 +7,19 @@ import com.rquimbiulco.pokedex.domain.usecase.GetPokemonUseCase
 import com.rquimbiulco.pokedex.view.core.architecture.base.BaseViewModel
 import com.rquimbiulco.pokedex.view.core.navigation.DrawerDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PokeDexViewModel @Inject constructor(
     getPokemonUseCase: GetPokemonUseCase,
     private val sessionRepository: SessionRepository
-) : BaseViewModel<PokedexState, PokedexAction, PokedexEvent>(initialState = PokedexState()) {
+) : BaseViewModel<PokedexUiState, PokedexAction, PokedexEvent>(initialState = PokedexUiState) {
     // cachedIn permite que la paginación sobreviva a rotaciones de pantalla
     val pokemonFlow = getPokemonUseCase().cachedIn(viewModelScope)
 
     override fun handleAction(action: PokedexAction) {
         when (action) {
-            is PokedexAction.DrawerItemClicked -> viewModelScope.launch { selectDrawer(action.destination) }
+            is PokedexAction.DrawerItemClicked -> launch { selectDrawer(action.destination) }
             is PokedexAction.PokemonClicked -> {}
         }
     }

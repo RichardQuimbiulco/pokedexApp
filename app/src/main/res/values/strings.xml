@@ -30,7 +30,10 @@
     <string name="drawer_item_settings">Settings</string>
     <string name="drawer_item_favorites">Favorites</string>
     <string name="drawer_item_log_out">Log out</string>
+    <string name="content_description_icon_home">Icono Home</string>
     <string name="content_description_icon_logout">Icono logout</string>
+    <string name="content_description_icon_favourites">Icono Favoritos</string>
+    <string name="content_description_icon_settings">Icono Settings</string>
     <string name="login_screen_user_already_exists">El usuario ya existe</string>
     <string name="trainer">Entrenador</string>
     <string name="admin">Admin</string>
