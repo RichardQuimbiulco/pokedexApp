@@ -39,4 +39,6 @@
     <string name="admin">Admin</string>
     <string name="invalid_credentials">Invalid credentials</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="splash_screen_title">Pokedex</string>
+    <string name="splash_screen_subtitle">Emplora el mundo Pokemon</string>
 </resources>

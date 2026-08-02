@@ -20,15 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.rquimbiulco.pokedex.R
 
 @Composable
-fun SplashScreen(
-    viewmodel: SplashViewModel,
-    navigateToLogin: () -> Unit,
-    navigateToPokedex: () -> Unit,
-) {
+fun SplashScreen() {
     val scale = remember { Animatable(0.8f) }
 
     LaunchedEffect(Unit) {
@@ -39,18 +36,6 @@ fun SplashScreen(
                 easing = FastOutSlowInEasing
             )
         )
-    }
-
-    LaunchedEffect(Unit) {
-        viewmodel.uiEvent.collect { event ->
-            when (event) {
-                SplashEvent.NavigateToLogin ->
-                    navigateToLogin()
-
-                SplashEvent.NavigateToPokedex ->
-                    navigateToPokedex()
-            }
-        }
     }
 
     Box(
@@ -76,14 +61,14 @@ fun SplashScreen(
             Spacer(Modifier.height(24.dp))
 
             Text(
-                text = "Pokédex",
+                text = stringResource(R.string.splash_screen_title),
                 style = MaterialTheme.typography.headlineLarge
             )
 
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = "Explore the Pokémon World",
+                text = stringResource(R.string.splash_screen_subtitle),
                 style = MaterialTheme.typography.bodyLarge
             )
 

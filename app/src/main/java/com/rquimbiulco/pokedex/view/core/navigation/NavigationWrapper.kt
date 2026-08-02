@@ -1,14 +1,12 @@
 package com.rquimbiulco.pokedex.view.core.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.rquimbiulco.pokedex.view.auth.login.container.LoginContainer
 import com.rquimbiulco.pokedex.view.auth.register.container.RegisterUserContainer
-import com.rquimbiulco.pokedex.view.auth.splash.SplashScreen
-import com.rquimbiulco.pokedex.view.auth.splash.SplashViewModel
+import com.rquimbiulco.pokedex.view.auth.splash.container.SplashContainer
 import com.rquimbiulco.pokedex.view.pokedex.container.PokedexContainer
 
 @Composable
@@ -34,15 +32,13 @@ fun NavigationWrapper() {
             )
         }
         composable<Splash> {
-            val splashViewModel: SplashViewModel = hiltViewModel()
-            SplashScreen(
+            SplashContainer(
                 navigateToLogin = {
                     navController.navigateToLogin()
                 },
                 navigateToPokedex = {
                     navController.navigateToPokedex()
-                },
-                viewmodel = splashViewModel
+                }
             )
         }
     }
