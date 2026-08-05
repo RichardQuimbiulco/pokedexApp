@@ -18,6 +18,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -38,11 +39,13 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.rquimbiulco.pokedex.R
+import com.rquimbiulco.pokedex.view.core.components.BackButton
 import com.rquimbiulco.pokedex.view.core.components.MyPokeRegisterRadioButton
 import com.rquimbiulco.pokedex.view.core.components.PokeButtonPrimary
 import com.rquimbiulco.pokedex.view.core.components.PokeText
 import com.rquimbiulco.pokedex.view.core.components.PokeTextField
 import com.rquimbiulco.pokedex.view.core.components.PokeTrailingIconTextField
+import com.rquimbiulco.pokedex.view.core.components.TopBar
 
 @Composable
 fun RegisterUserScreen(
@@ -52,7 +55,9 @@ fun RegisterUserScreen(
 ) {
     Scaffold(
         topBar = {
-            TopBar(navigateBack = { onAction(RegisterUserAction.OnBackButtonClicked) })
+            TopBar(
+                navigationIcon = { BackButton { onAction(RegisterUserAction.OnBackButtonClicked) } }
+            )
         },
         bottomBar = {
             BottomBar(
@@ -206,25 +211,6 @@ fun CircularProgressBar() {
             strokeWidth = 4.dp
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopBar(navigateBack: () -> Unit) {
-    TopAppBar(
-        title = {},
-        navigationIcon = {
-            Icon(
-                painter = painterResource(R.drawable.ic_arrow_back),
-                contentDescription = stringResource(R.string.register_screen_content_description_back_icon),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier
-                    .padding(12.dp)
-                    .clickable { navigateBack() }
-            )
-        },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
-    )
 }
 
 @Composable

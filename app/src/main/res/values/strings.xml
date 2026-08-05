@@ -12,7 +12,6 @@
     <string name="register_screen_text_wrong_confirm_password">Las contraseñas no coinciden</string>
     <string name="register_screen_text_wrong_email_format">Formato de email incorrecto</string>
     <string name="register_screen_text_is_not_valid_password">La contraseña debe contener al menos 8 caracteres, 1 mayúscula, 1 minúscula, 1 dígito y 1 caracter especial</string>
-    <string name="register_screen_content_description_back_icon">navigate back icon</string>
     <string name="register_screen_title_email">¿Cual es tu correo electrónico?</string>
     <string name="register_screen_subtitle_email">Introduce tu correo electrónico de contacto.</string>
     <string name="register_screen_textfield_email">Email</string>
@@ -41,4 +40,7 @@
     <string name="unknown_error">Unknown error</string>
     <string name="splash_screen_title">Pokedex</string>
     <string name="splash_screen_subtitle">Emplora el mundo Pokemon</string>
+    <string name="detail_screen_content_description_icon_favorite">Favourites icon</string>
+    <string name="screens_content_description_back_icon">Volver</string>
+    <string name="detail_screen_title">Pokemon</string>
 </resources>

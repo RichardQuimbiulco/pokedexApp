@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.rquimbiulco.pokedex.view.auth.login.container.LoginContainer
 import com.rquimbiulco.pokedex.view.auth.register.container.RegisterUserContainer
 import com.rquimbiulco.pokedex.view.auth.splash.container.SplashContainer
+import com.rquimbiulco.pokedex.view.details.container.DetailContainer
 import com.rquimbiulco.pokedex.view.pokedex.container.PokedexContainer
 
 @Composable
@@ -39,6 +40,11 @@ fun NavigationWrapper() {
                 navigateToPokedex = {
                     navController.navigateToPokedex()
                 }
+            )
+        }
+        composable<Detail> {
+            DetailContainer(
+                navigateBack = { navController.popBackStack() }
             )
         }
     }

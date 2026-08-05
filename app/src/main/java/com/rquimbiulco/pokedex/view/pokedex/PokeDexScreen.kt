@@ -33,6 +33,7 @@ import com.rquimbiulco.pokedex.R
 import com.rquimbiulco.pokedex.domain.model.PokemonModel
 import com.rquimbiulco.pokedex.view.core.components.PokeModalNavigationDrawer
 import com.rquimbiulco.pokedex.view.core.components.PokeText
+import com.rquimbiulco.pokedex.view.core.components.TopBar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +52,7 @@ fun PokedexScreen(
     }) {
         Scaffold(
             topBar = {
-                TopAppBar(
+                TopBar(
                     title = {
                         PokeText(
                             text = stringResource(R.string.pokedex_screen_title),

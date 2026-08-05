@@ -10,5 +10,9 @@ object Register
 
 @Serializable
 object Pokedex
+
 @Serializable
 object Splash
+
+@Serializable
+object Detail
