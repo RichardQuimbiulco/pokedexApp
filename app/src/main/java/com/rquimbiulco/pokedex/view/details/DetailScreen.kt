@@ -1,5 +1,7 @@
 package com.rquimbiulco.pokedex.view.details
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,6 +20,7 @@ import com.rquimbiulco.pokedex.view.core.components.BackButton
 import com.rquimbiulco.pokedex.view.core.components.PokeText
 import com.rquimbiulco.pokedex.view.core.components.TopBar
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DetailScreen(
     state: DetailUiState,
@@ -33,7 +36,7 @@ fun DetailScreen(
                         modifier = Modifier.padding(24.dp)
                     )
                 },
-                navigationIcon = { BackButton {} },
+                navigationIcon = { BackButton { onAction(DetailAction.OnBackButtonClicked) } },
                 actions = {
                     IconButton(
                         onClick = {
@@ -49,6 +52,6 @@ fun DetailScreen(
             )
         },
     ) {
-        // Contenido de la pantalla
+        Text("Detail")
     }
 }

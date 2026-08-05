@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -87,8 +86,8 @@ fun PokedexScreen(
             ) {
                 items(count = pokemonItems.itemCount) { index ->
                     val pokemon = pokemonItems[index]
-                    pokemon?.let {
-                        PokemonItem(it)
+                    pokemon?.let { pokemon ->
+                        PokemonItem(pokemon) { onAction(PokedexAction.PokemonClicked(pokemon.id)) }
                     }
                 }
             }
@@ -97,12 +96,13 @@ fun PokedexScreen(
 }
 
 @Composable
-fun PokemonItem(pokemonModel: PokemonModel) {
+fun PokemonItem(pokemonModel: PokemonModel, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -135,6 +135,7 @@ fun PokemonItemPreview() {
             id = 0,
             name = "bulbasaur",
             imageUrl = ""
-        )
+        ),
+        onClick = {}
     )
 }

@@ -29,6 +29,9 @@ fun NavigationWrapper() {
             PokedexContainer(
                 navigateToLogin = {
                     navController.navigateToLogin()
+                },
+                navigateToDetail = { id ->
+                    navController.navigate(Detail(id))
                 }
             )
         }

@@ -20,7 +20,7 @@ class PokeDexViewModel @Inject constructor(
     override fun handleAction(action: PokedexAction) {
         when (action) {
             is PokedexAction.DrawerItemClicked -> launch { selectDrawer(action.destination) }
-            is PokedexAction.PokemonClicked -> {}
+            is PokedexAction.PokemonClicked -> launch { sendEvent(PokedexEvent.NavigateToDetail(action.pokemonId)) }
         }
     }
 

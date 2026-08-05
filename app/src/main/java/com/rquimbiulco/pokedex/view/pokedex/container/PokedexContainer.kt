@@ -11,6 +11,7 @@ import com.rquimbiulco.pokedex.view.pokedex.PokedexScreen
 @Composable
 fun PokedexContainer(
     navigateToLogin: () -> Unit,
+    navigateToDetail: (Int) -> Unit
 ) {
     val viewModel: PokeDexViewModel = hiltViewModel()
     val lazyPokemonItems = viewModel.pokemonFlow.collectAsLazyPagingItems()
@@ -20,6 +21,10 @@ fun PokedexContainer(
             when (event) {
                 PokedexEvent.NavigateToLogin -> {
                     navigateToLogin()
+                }
+
+                is PokedexEvent.NavigateToDetail -> {
+                    navigateToDetail(event.id)
                 }
             }
         }

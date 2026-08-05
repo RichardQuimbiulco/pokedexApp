@@ -15,4 +15,4 @@ object Pokedex
 object Splash
 
 @Serializable
-object Detail
+data class Detail(val id: Int)
