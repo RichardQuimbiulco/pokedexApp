@@ -8,7 +8,9 @@ import androidx.paging.map
 import com.rquimbiulco.pokedex.data.datasource.api.ApiService
 import com.rquimbiulco.pokedex.data.datasource.local.database.PokeDatabase
 import com.rquimbiulco.pokedex.data.datasource.local.database.entity.toModel
+import com.rquimbiulco.pokedex.data.mapper.toModel
 import com.rquimbiulco.pokedex.data.repository.mediator.PokemonRemoteMediator
+import com.rquimbiulco.pokedex.domain.model.PokemonDetailModel
 import com.rquimbiulco.pokedex.domain.model.PokemonModel
 import com.rquimbiulco.pokedex.domain.repository.PokemonRepository
 import kotlinx.coroutines.flow.Flow
@@ -29,5 +31,9 @@ class PokemonRepositoryImpl @Inject constructor(
         ).flow.map { pagingData ->
             pagingData.map { entity -> entity.toModel() }
         }
+    }
+
+    override suspend fun getPokemonDetail(id: Int): PokemonDetailModel {
+        return apiService.getPokemonDetailById(id).toModel()
     }
 }

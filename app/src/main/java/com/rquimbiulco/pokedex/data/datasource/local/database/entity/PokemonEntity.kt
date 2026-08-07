@@ -7,7 +7,7 @@ import com.rquimbiulco.pokedex.domain.model.PokemonModel
 @Entity
 data class PokemonEntity(
     @PrimaryKey
-    val id: Int = System.currentTimeMillis().hashCode(),
+    val id: Int,
     val name: String,
     val imageUrl: String
 )

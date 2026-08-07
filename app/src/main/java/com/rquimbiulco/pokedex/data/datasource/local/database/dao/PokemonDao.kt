@@ -20,5 +20,6 @@ interface PokemonDao {
 
     @Query("DELETE FROM PokemonEntity")
     suspend fun clearAll()
-
+    @Query("SELECT COUNT(*) FROM PokemonEntity")
+    suspend fun getCount(): Int
 }

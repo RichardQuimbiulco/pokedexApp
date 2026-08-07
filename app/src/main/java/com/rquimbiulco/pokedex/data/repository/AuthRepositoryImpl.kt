@@ -1,9 +1,5 @@
 package com.rquimbiulco.pokedex.data.repository
 
-import android.util.Log
-import com.rquimbiulco.pokedex.data.datasource.api.ApiService
-import com.rquimbiulco.pokedex.data.response.toDomain
-import com.rquimbiulco.pokedex.domain.model.UserModel
 import com.rquimbiulco.pokedex.domain.repository.AuthRepository
 import com.rquimbiulco.pokedex.domain.repository.UserRepository
 import com.rquimbiulco.pokedex.domain.model.LoginResult
@@ -11,7 +7,6 @@ import com.rquimbiulco.pokedex.domain.repository.SessionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.collections.listOf
 
 class AuthRepositoryImpl @Inject constructor(private val userRepository: UserRepository, private val sessionRepository: SessionRepository) :
     AuthRepository {
