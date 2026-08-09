@@ -1,7 +1,6 @@
 package com.rquimbiulco.pokedex.view.details
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,6 +39,9 @@ import com.rquimbiulco.pokedex.domain.model.StatModel
 import com.rquimbiulco.pokedex.view.core.components.BackButton
 import com.rquimbiulco.pokedex.view.core.components.PokeText
 import com.rquimbiulco.pokedex.view.core.components.TopBar
+import com.rquimbiulco.pokedex.view.core.extensions.backgroundColor
+import com.rquimbiulco.pokedex.view.core.extensions.iconRes
+import java.util.Locale.getDefault
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -56,8 +59,13 @@ fun DetailScreen(
             }
         }
     }
+    val backgroundColor = state.pokemonDetail.types
+        .firstOrNull()
+        ?.backgroundColor()
+        ?: MaterialTheme.colorScheme.background
 
     Scaffold(
+        containerColor = backgroundColor,
         topBar = {
             TopBar(
                 title = {
@@ -85,14 +93,14 @@ fun DetailScreen(
                             contentDescription = stringResource(R.string.detail_screen_content_description_icon_favorite)
                         )
                     }
-                }
+                },
+                containerColor = backgroundColor
             )
         },
     ) { padding ->
         LazyColumn(
             state = listState,
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
                 .padding(padding)
                 .padding(24.dp)
                 .fillMaxSize(),
@@ -142,17 +150,27 @@ fun PokemonHeader(pokemon: PokemonDetailModel) {
 }
 
 @Composable
-fun PokemonType(types: List<String>) {
+fun PokemonType(types: List<PokemonType>) {
     types.forEach { type ->
-        /*AsyncImage(
-            model = pokemon.imageUrl,
-            contentDescription = pokemon.name,
-            modifier = Modifier.size(220.dp)
-        )*/
-        PokeText(
-            text = type,
-            style = MaterialTheme.typography.headlineSmall
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(type.iconRes()),
+                    contentDescription = type.value,
+                    tint = Color.Unspecified
+                )
+                PokeText(
+                    text = type.name.lowercase(getDefault()).replaceFirstChar { it.uppercase() },
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
     }
 }
 
@@ -297,7 +315,7 @@ fun DetailScreenPreview() {
                     AbilityModel(name = "overgrow", isHidden = true),
                     AbilityModel(name = "chlorophyll", isHidden = true)
                 ),
-                types = listOf("grass", "poison"),
+                types = listOf(PokemonType.GRASS, PokemonType.POISON),
                 stats = listOf(
                     StatModel(name = "hp", baseStat = 45),
                     StatModel(name = "attack", baseStat = 49),

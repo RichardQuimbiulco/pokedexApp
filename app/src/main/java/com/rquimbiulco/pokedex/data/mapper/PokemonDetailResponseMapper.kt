@@ -4,6 +4,7 @@ import com.rquimbiulco.pokedex.data.response.PokemonDetailResponse
 import com.rquimbiulco.pokedex.domain.model.AbilityModel
 import com.rquimbiulco.pokedex.domain.model.PokemonDetailModel
 import com.rquimbiulco.pokedex.domain.model.StatModel
+import com.rquimbiulco.pokedex.view.details.PokemonType
 
 fun PokemonDetailResponse.toModel(): PokemonDetailModel =
     PokemonDetailModel(
@@ -11,7 +12,7 @@ fun PokemonDetailResponse.toModel(): PokemonDetailModel =
         name = name,
         order = order,
         imageUrl = sprites.pokemonImage,
-        types = types.map { it.type.name },
+        types = types.map { PokemonType.valueOf(it.type.name.uppercase()) },
         weight = weight,
         height = height,
         experience = experience,
