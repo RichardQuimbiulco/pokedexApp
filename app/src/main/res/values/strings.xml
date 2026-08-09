@@ -43,4 +43,12 @@
     <string name="detail_screen_content_description_icon_favorite">Favourites icon</string>
     <string name="screens_content_description_back_icon">Volver</string>
     <string name="detail_screen_title">Pokemon</string>
+    <string name="detail_screen_information">Información</string>
+    <string name="detail_screen_height">Altura</string>
+    <string name="detail_screen_weight">Peso</string>
+    <string name="detail_screen_abilities">Abilidades</string>
+    <string name="detail_screen_height_value">%1$s m</string>
+    <string name="detail_screen_weight_value">%1$s kg</string>
+    <string name="detail_screen_pokemon_order">#%1$s</string>
+    <string name="detail_screen_stats">Estadísticas</string>
 </resources>

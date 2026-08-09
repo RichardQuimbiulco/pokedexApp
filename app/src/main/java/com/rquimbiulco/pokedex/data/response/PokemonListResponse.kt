@@ -16,16 +16,3 @@ data class PokemonResponse(
     val name: String,
     val url: String
 )
-
-@Serializable
-data class PokemonDetailResponse(
-    val id: Int,
-    val name: String,
-    val sprites: PokemonSpriteResponse
-)
-
-@Serializable
-data class PokemonSpriteResponse(
-    @SerialName("front_default")
-    val pokemonImage: String
-)
