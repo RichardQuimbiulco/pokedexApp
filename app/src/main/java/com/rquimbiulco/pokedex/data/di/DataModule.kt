@@ -15,10 +15,12 @@ import com.rquimbiulco.pokedex.data.repository.AuthRepositoryImpl
 import com.rquimbiulco.pokedex.data.repository.PokemonRepositoryImpl
 import com.rquimbiulco.pokedex.data.repository.SessionRepositoryImpl
 import com.rquimbiulco.pokedex.data.repository.UserRepositoryImpl
+import com.rquimbiulco.pokedex.data.security.PasswordEncryptorImpl
 import com.rquimbiulco.pokedex.domain.repository.AuthRepository
 import com.rquimbiulco.pokedex.domain.repository.PokemonRepository
 import com.rquimbiulco.pokedex.domain.repository.SessionRepository
 import com.rquimbiulco.pokedex.domain.repository.UserRepository
+import com.rquimbiulco.pokedex.domain.security.PasswordEncryptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -104,16 +106,18 @@ object DataModule {
     }
 
     @Provides
-    fun provideAuthRepository(userRepository: UserRepository, sessionRepository: SessionRepository): AuthRepository {
-        return AuthRepositoryImpl(userRepository, sessionRepository)
+    fun provideAuthRepository(
+        userRepository: UserRepository
+    ): AuthRepository {
+        return AuthRepositoryImpl(userRepository)
     }
 
     @Provides
     fun providesUserDao(database: PokeDatabase) = database.userDao()
 
     @Provides
-    fun providesUserRepository(userDao: UserDao): UserRepository {
-        return UserRepositoryImpl(userDao)
+    fun providesUserRepository(userDao: UserDao, passwordEncryptor: PasswordEncryptor): UserRepository {
+        return UserRepositoryImpl(userDao, passwordEncryptor)
     }
 
     @Provides
@@ -125,5 +129,11 @@ object DataModule {
         database: PokeDatabase
     ): PokemonRepository {
         return PokemonRepositoryImpl(apiService, database)
+    }
+
+    @Provides
+    @Singleton
+    fun providePasswordEncryptor(): PasswordEncryptor {
+        return PasswordEncryptorImpl()
     }
 }

@@ -9,11 +9,11 @@ data class UserRegisterModel(
     val userMode: UserMode
 )
 
-fun UserRegisterModel.toUserEntity(): UserEntity {
+fun UserRegisterModel.toUserEntity(encryptedPassword: String): UserEntity {
     return UserEntity(
         id = userId,
         email = email,
-        password = password,
+        password = encryptedPassword,
         userType = when (userMode) {
             UserMode.TRAINER -> 0
             UserMode.ADMIN -> 1

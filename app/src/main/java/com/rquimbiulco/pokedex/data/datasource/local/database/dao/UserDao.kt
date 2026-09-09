@@ -16,6 +16,6 @@ interface UserDao {
     fun getAllUsers(): Flow<List<UserEntity>>
 
     // Busca el usuario por credenciales. Devuelve null si no existe.
-    @Query("SELECT * FROM UserEntity WHERE email = :email AND password = :password LIMIT 1")
-    suspend fun getUserByCredentials(email: String, password: String): UserEntity?
+    @Query("SELECT * FROM UserEntity WHERE email = :email LIMIT 1")
+    suspend fun getUserByEmail(email: String): UserEntity?
 }
