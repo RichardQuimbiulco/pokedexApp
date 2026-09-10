@@ -1,8 +1,11 @@
 package com.rquimbiulco.pokedex.view.details
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,13 +14,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -37,6 +45,8 @@ import com.rquimbiulco.pokedex.domain.model.AbilityModel
 import com.rquimbiulco.pokedex.domain.model.PokemonDetailModel
 import com.rquimbiulco.pokedex.domain.model.StatModel
 import com.rquimbiulco.pokedex.view.core.components.BackButton
+import com.rquimbiulco.pokedex.view.core.components.PokeAbilitiesCard
+import com.rquimbiulco.pokedex.view.core.components.PokeInfoCard
 import com.rquimbiulco.pokedex.view.core.components.PokeText
 import com.rquimbiulco.pokedex.view.core.components.TopBar
 import com.rquimbiulco.pokedex.view.core.extensions.backgroundColor
@@ -65,7 +75,6 @@ fun DetailScreen(
         ?: MaterialTheme.colorScheme.background
 
     Scaffold(
-        containerColor = backgroundColor,
         topBar = {
             TopBar(
                 title = {
@@ -94,7 +103,6 @@ fun DetailScreen(
                         )
                     }
                 },
-                containerColor = backgroundColor
             )
         },
     ) { padding ->
@@ -111,7 +119,7 @@ fun DetailScreen(
             }
 
             item {
-                PokemonInfo(pokemon = state.pokemonDetail)
+                PokemonInfo(pokemon = state.pokemonDetail, backgroundColor = backgroundColor)
             }
 
             item {
@@ -175,7 +183,7 @@ fun PokemonType(types: List<PokemonType>) {
 }
 
 @Composable
-fun PokemonInfo(pokemon: PokemonDetailModel) {
+fun PokemonInfo(pokemon: PokemonDetailModel, backgroundColor: Color) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -192,52 +200,34 @@ fun PokemonInfo(pokemon: PokemonDetailModel) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            PokemonInfoItem(
+            PokeInfoCard(
+                modifier = Modifier.weight(1f),
                 title = stringResource(R.string.detail_screen_height),
-                value = stringResource(R.string.detail_screen_height_value, pokemon.height / 10f)
+                value = stringResource(
+                    R.string.detail_screen_height_value,
+                    pokemon.height / 10f
+                ),
+                accentColor = backgroundColor,
+                icon = R.drawable.ic_horizontal_rule
             )
-
-            PokemonInfoItem(
+            Spacer(modifier = Modifier.width(16.dp))
+            PokeInfoCard(
+                modifier = Modifier.weight(1f),
                 title = stringResource(R.string.detail_screen_weight),
-                value = stringResource(R.string.detail_screen_weight_value, pokemon.weight / 10f)
+                value = stringResource(
+                    R.string.detail_screen_weight_value,
+                    pokemon.weight / 10f
+                ),
+                accentColor = backgroundColor,
+                icon = R.drawable.ic_balance
             )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            PokemonInfoItem(
-                title = stringResource(R.string.detail_screen_abilities),
-                value = pokemon.abilities.joinToString(" / ") {
-                    it.name.replaceFirstChar { char -> char.uppercase() }
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun PokemonInfoItem(
-    title: String,
-    value: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        PokeText(
-            text = title,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        PokeText(
-            text = value,
-            style = MaterialTheme.typography.titleMedium
+        PokeAbilitiesCard(
+            abilities = pokemon.abilities,
+            accentColor = backgroundColor
         )
     }
 }
