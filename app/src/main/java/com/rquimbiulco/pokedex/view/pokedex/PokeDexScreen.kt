@@ -74,7 +74,6 @@ fun PokedexScreen(
                         }
                     }
                 )
-
             },
         ) { padding ->
             LazyColumn(
@@ -134,7 +133,8 @@ fun PokemonItemPreview() {
         pokemonModel = PokemonModel(
             id = 0,
             name = "bulbasaur",
-            imageUrl = ""
+            imageUrl = "",
+            types = emptyList()
         ),
         onClick = {}
     )

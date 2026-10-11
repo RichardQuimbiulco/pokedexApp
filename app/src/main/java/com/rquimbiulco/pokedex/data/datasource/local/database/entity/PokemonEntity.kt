@@ -15,5 +15,6 @@ data class PokemonEntity(
 fun PokemonEntity.toModel() = PokemonModel(
     id = id,
     name = name,
-    imageUrl = imageUrl
+    imageUrl = imageUrl,
+    types = emptyList()
 )

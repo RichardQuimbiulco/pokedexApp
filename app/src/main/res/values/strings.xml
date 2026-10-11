@@ -51,4 +51,5 @@
     <string name="detail_screen_weight_value">%1$s kg</string>
     <string name="detail_screen_pokemon_order">#%1$s</string>
     <string name="detail_screen_stats">Estadísticas</string>
+    <string name="favorites_screen_title">Favorites</string>
 </resources>

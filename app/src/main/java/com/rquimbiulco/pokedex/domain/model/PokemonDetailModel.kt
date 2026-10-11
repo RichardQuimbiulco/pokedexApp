@@ -14,7 +14,8 @@ data class PokemonDetailModel(
     val height: Double = 0.0,
     val experience: Int = 0,
     val stats: List<StatModel> = emptyList(),
-    val abilities: List<AbilityModel> = emptyList()
+    val abilities: List<AbilityModel> = emptyList(),
+    val isFavorite: Boolean = false
 )
 
 data class StatModel(

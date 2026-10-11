@@ -8,6 +8,7 @@ import com.rquimbiulco.pokedex.view.auth.login.container.LoginContainer
 import com.rquimbiulco.pokedex.view.auth.register.container.RegisterUserContainer
 import com.rquimbiulco.pokedex.view.auth.splash.container.SplashContainer
 import com.rquimbiulco.pokedex.view.details.container.DetailContainer
+import com.rquimbiulco.pokedex.view.favorites.container.FavoritesContainer
 import com.rquimbiulco.pokedex.view.pokedex.container.PokedexContainer
 
 @Composable
@@ -30,6 +31,9 @@ fun NavigationWrapper() {
                 navigateToLogin = {
                     navController.navigateToLogin()
                 },
+                navigateToFavorites = {
+                    navController.navigate(Favorites)
+                },
                 navigateToDetail = { id ->
                     navController.navigate(Detail(id))
                 }
@@ -50,6 +54,10 @@ fun NavigationWrapper() {
                 navigateBack = { navController.popBackStack() }
             )
         }
+        composable<Favorites> {
+            FavoritesContainer(
+                navigateBack = { navController.popBackStack() }
+            )
+        }
     }
-
 }

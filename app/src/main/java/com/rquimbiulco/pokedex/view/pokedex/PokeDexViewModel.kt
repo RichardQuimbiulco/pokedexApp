@@ -37,7 +37,7 @@ class PokeDexViewModel @Inject constructor(
 
             DrawerDestination.Home -> {}
             DrawerDestination.Settings -> {}
-            DrawerDestination.Favorites -> {}
+            DrawerDestination.Favorites -> { sendEvent(PokedexEvent.NavigateToFavorites) }
         }
 
     }

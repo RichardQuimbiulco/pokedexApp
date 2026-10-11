@@ -11,6 +11,7 @@ import com.rquimbiulco.pokedex.view.pokedex.PokedexScreen
 @Composable
 fun PokedexContainer(
     navigateToLogin: () -> Unit,
+    navigateToFavorites: () -> Unit,
     navigateToDetail: (Int) -> Unit
 ) {
     val viewModel: PokeDexViewModel = hiltViewModel()
@@ -21,6 +22,9 @@ fun PokedexContainer(
             when (event) {
                 PokedexEvent.NavigateToLogin -> {
                     navigateToLogin()
+                }
+                PokedexEvent.NavigateToFavorites -> {
+                    navigateToFavorites()
                 }
 
                 is PokedexEvent.NavigateToDetail -> {

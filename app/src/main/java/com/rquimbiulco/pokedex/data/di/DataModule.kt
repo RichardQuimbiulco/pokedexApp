@@ -12,11 +12,13 @@ import com.rquimbiulco.pokedex.data.datasource.local.database.PokeDatabase
 import com.rquimbiulco.pokedex.data.datasource.local.database.dao.UserDao
 import com.rquimbiulco.pokedex.data.datasource.local.datastore.SessionDataStore
 import com.rquimbiulco.pokedex.data.repository.AuthRepositoryImpl
+import com.rquimbiulco.pokedex.data.repository.FavoritePokemonRepositoryImpl
 import com.rquimbiulco.pokedex.data.repository.PokemonRepositoryImpl
 import com.rquimbiulco.pokedex.data.repository.SessionRepositoryImpl
 import com.rquimbiulco.pokedex.data.repository.UserRepositoryImpl
 import com.rquimbiulco.pokedex.data.security.PasswordEncryptorImpl
 import com.rquimbiulco.pokedex.domain.repository.AuthRepository
+import com.rquimbiulco.pokedex.domain.repository.FavoritePokemonRepository
 import com.rquimbiulco.pokedex.domain.repository.PokemonRepository
 import com.rquimbiulco.pokedex.domain.repository.SessionRepository
 import com.rquimbiulco.pokedex.domain.repository.UserRepository
@@ -116,7 +118,10 @@ object DataModule {
     fun providesUserDao(database: PokeDatabase) = database.userDao()
 
     @Provides
-    fun providesUserRepository(userDao: UserDao, passwordEncryptor: PasswordEncryptor): UserRepository {
+    fun providesUserRepository(
+        userDao: UserDao,
+        passwordEncryptor: PasswordEncryptor
+    ): UserRepository {
         return UserRepositoryImpl(userDao, passwordEncryptor)
     }
 
@@ -129,6 +134,11 @@ object DataModule {
         database: PokeDatabase
     ): PokemonRepository {
         return PokemonRepositoryImpl(apiService, database)
+    }
+
+    @Provides
+    fun providesFavoritePokemonRepository(database: PokeDatabase): FavoritePokemonRepository {
+        return FavoritePokemonRepositoryImpl(database)
     }
 
     @Provides
